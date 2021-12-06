@@ -3,8 +3,8 @@
 
 int main(int argc, char* argv[]) {
 	TRACE(("\nfirst line of main, argc = %d, argv[0] = %s\n", argc, argv[0]));
-	Kernel::getInstance(argc, argv);
-	int ret = Kernel::getInstance().getReturnValue();
+	// Kernel::getInstance(argc, argv);
+	int ret = Kernel::getInstance(argc, argv).getReturnValue();
 	TRACE(("\nlast line of main with ret = %d", ret));
 	return ret;
 }
