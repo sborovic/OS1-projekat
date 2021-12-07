@@ -59,11 +59,11 @@ ID Thread::getRunningId() {
 }
 
 void dispatch() {
-	LOCK
+	Kernel::getInstance().lock();
 	TRACE(("\ndispatch(): posle lock()"));
 	Kernel::getInstance().context_switch_on_demand = 1;
 	Kernel::getInstance().dispatched = 1;
-	UNLOCK
 	TRACE(("\ndispatch(): posle unlock()"));
+	Kernel::getInstance().unlock();
 	timer();
 }

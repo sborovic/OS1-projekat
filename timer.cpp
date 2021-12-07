@@ -52,13 +52,13 @@ void interrupt timer(...) {
 			Kernel::getInstance().running = Scheduler::get();
 
 			/* DEBUG */
-#if DEBUG
-			Kernel::getInstance().lock();
-			cout << "\ntimer(): postavljamo running na nit sa id="
-					<< Kernel::getInstance().running->getLocalId() << endl;
-			Kernel::getInstance().unlock();
-			asm cli;
-#endif /* end of DEBUG */
+//#if DEBUG
+//			Kernel::getInstance().lock();
+//			cout << "\ntimer(): postavljamo running na nit sa id="
+//					<< Kernel::getInstance().running->getLocalId() << endl;
+//			Kernel::getInstance().unlock();
+//			asm cli;
+//#endif /* end of DEBUG */
 
 			// Azuriraj kontekst prema novoizabranoj niti
 			tsp = Kernel::getInstance().running->sp;
