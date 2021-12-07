@@ -4,11 +4,12 @@
 
 class KernelSem: public Semaphore {
 public:
-	virtual void wait();
+	virtual int wait(Time maxTimeToWait);
 	virtual void signal();
 private:
 	void block();
 	void unblock();
+	friend class Semaphore;
 	// KernelSem je moguce konstruisati samo unutar Semaphore
 	KernelSem(int init);
 	// Zabranjeno je kopiranje KernelSem

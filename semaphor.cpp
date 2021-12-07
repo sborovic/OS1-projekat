@@ -12,3 +12,6 @@ Semaphore::~Semaphore() {
 int Semaphore::wait(Time maxTimeToWait) {
 
 }
+void Semaphore::signal() {
+
+}

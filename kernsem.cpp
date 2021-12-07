@@ -4,3 +4,10 @@
 KernelSem::KernelSem(int init) {
 	val = init;
 }
+int KernelSem::wait(Time maxTimeToWait) {
+
+}
+
+void KernelSem::signal() {
+
+}
