@@ -41,16 +41,16 @@ PCB::PCB(Thread* myThread, StackSize stackSize, Time timeSlice) :
 void PCB::wrapper() {
 	Kernel::getInstance().running->myThread->run();
 	TRACE(("\PCB::wrapper(): posle run() metode niti sa id = %d", Kernel::getInstance().running->getLocalId()));
-	LOCK
+	Kernel::getInstance().lock();
 	List<PCB>::Iterator it = Kernel::getInstance().running->waitingToComplete.begin();
 	List<PCB>::Iterator end = Kernel::getInstance().running->waitingToComplete.end();
 	for (; it != end; ++it) {
-		TRACE(("\nPCB::wrapper(): ubacujemo u wtc listu nit sa id = %d", (*it)->getLocalId()));
+		TRACE(("\nPCB::wrapper(): ubacujemo u waitingToComplete listu nit sa id = %d", (*it)->getLocalId()));
 		(*it)->state = PCB::ready;
 		Scheduler::put(*it);
 	}
 	Kernel::getInstance().running->state = PCB::finished;
-	UNLOCK
+	Kernel::getInstance().unlock();
 	dispatch();
 }
 

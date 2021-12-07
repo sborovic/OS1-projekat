@@ -82,7 +82,7 @@ void Kernel::IdleThread::run() {
  */
 Kernel::UserMainThread::UserMainThread(int argc, char** argv, int& ret)
 	: Thread(), argc(argc), argv(argv), ret(ret) {
-	TRACE(("\nCalled UserMainThread()"));
+	TRACE(("\nKernel::UserMainThread()"));
 }
 Kernel::UserMainThread::~UserMainThread() {
 	waitToComplete();

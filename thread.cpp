@@ -37,12 +37,12 @@ void Thread::waitToComplete() {
 		return;
 	}
 	TRACE(("\nU Thread::waitToComplete()"));
-	LOCK
+	Kernel::getInstance().lock();
 	PCB* running = Kernel::getInstance().running;
 	running->state = PCB::blocked;
 	myPCB->waitingToComplete.add(running);
+	Kernel::getInstance().unlock();
 	TRACE(("\nThread::waitToComplete(): id = %d, a u wtc ubacena nit sa id %d", getId(), running->getLocalId()));
-	UNLOCK
 	dispatch();
 
 }
@@ -52,9 +52,9 @@ ID Thread::getId() {
 }
 
 ID Thread::getRunningId() {
-	LOCK
+	Kernel::getInstance().lock();
 	ID id = Kernel::getInstance().running->getLocalId();
-	UNLOCK
+	Kernel::getInstance().unlock();
 	return id;
 }
 

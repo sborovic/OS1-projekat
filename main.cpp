@@ -2,10 +2,10 @@
 #include "debug.h"
 
 int main(int argc, char* argv[]) {
-	TRACE(("\nfirst line of main, argc = %d, argv[0] = %s\n", argc, argv[0]));
+	TRACE(("\nFirst line of main(), argc = %d, argv[0] = %s\n", argc, argv[0]));
 	// Kernel::getInstance(argc, argv);
 	int ret = Kernel::getInstance(argc, argv).getReturnValue();
-	TRACE(("\nlast line of main with ret = %d", ret));
+	TRACE(("\nLast line of main with ret = %d", ret));
 	return ret;
 }
 
