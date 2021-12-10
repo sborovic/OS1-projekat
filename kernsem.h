@@ -1,14 +1,14 @@
 #ifndef _KERNSEM_H_
 #define _KERNSEM_H_
 
-#include "semaphor.h"
 #include "list.h"
+#include "semaphor.h"
 class PCB;
 
-class KernelSem: public Semaphore {
+class KernelSem {
 public:
-	virtual int wait(Time maxTimeToWait);
-	virtual void signal();
+	int wait(Time maxTimeToWait);
+	void signal();
 	~KernelSem();
 private:
 	void block();
