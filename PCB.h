@@ -21,7 +21,7 @@ public:
 	Time timeSlice;
 	int unlimited;
 	List<PCB> waitingToComplete;
-	jmp_buf context;
+	jmp_buf* context;
 private:
 	PCB(PCB const&);
 	PCB& operator=(PCB const&);

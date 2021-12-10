@@ -15,10 +15,10 @@ KernelSem::~KernelSem() {
 
 void KernelSem::block() {
 	PCB* running = Kernel::getInstance().running;
-	if (setjmp(running->context) == 0) {
+	if (setjmp(*running->context) == 0) {
 		blockedOnSemaphore->add(running);
 		Kernel::getInstance().running = Scheduler::get();
-		longjmp(Kernel::getInstance().running->context, 1);
+		longjmp(*Kernel::getInstance().running->context, 1);
 	} else return;
 }
 
