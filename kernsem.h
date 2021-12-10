@@ -1,11 +1,15 @@
+#ifndef _KERNSEM_H_
+#define _KERNSEM_H_
+
 #include "semaphor.h"
 #include "list.h"
-#include "PCB.h"
+class PCB;
 
 class KernelSem: public Semaphore {
 public:
 	virtual int wait(Time maxTimeToWait);
 	virtual void signal();
+	~KernelSem();
 private:
 	void block();
 	void unblock();
@@ -16,6 +20,7 @@ private:
 	KernelSem(KernelSem const&);
 	KernelSem& operator=(KernelSem const&);
 	int val;
-	List<PCB>* blocked;
-
+	List<PCB>* blockedOnSemaphore;
 };
+
+#endif /* _KERNSEM_H_ */

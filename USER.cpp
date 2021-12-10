@@ -1,5 +1,7 @@
 #include "utility.h"
 #include "thread.h"
+#include "semaphor.h"
+#include <stdlib.h>
 
 
 /*

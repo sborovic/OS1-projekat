@@ -4,6 +4,7 @@
 #include "thread.h"
 #include "list.h"
 #include "thr_mem.h"
+#include "setjmp.h"
 
 class PCB : public ThrMem {
 public:
@@ -20,6 +21,7 @@ public:
 	Time timeSlice;
 	int unlimited;
 	List<PCB> waitingToComplete;
+	jmp_buf context;
 private:
 	PCB(PCB const&);
 	PCB& operator=(PCB const&);
