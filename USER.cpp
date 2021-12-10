@@ -137,10 +137,10 @@ void tick(){}
 int userMain(int argc, char** argv)
 {
 	syncPrintf("Test starts.\n");
-	Producer p;
-	Consumer c;
-	p.start();
-	c.start();
+//	Producer p;
+//	Consumer c;
+//	p.start();
+//	c.start();
 	syncPrintf("Test ends.\n");
 	return 0;
 }

@@ -3,6 +3,7 @@
 #include "kernel.h"
 #include "list.h"
 #include "SCHEDULE.H"
+#include "debug.h"
 
 KernelSem::KernelSem(int init) {
 	val = init;
@@ -14,17 +15,17 @@ KernelSem::~KernelSem() {
 }
 
 void KernelSem::block() {
-	PCB* running = Kernel::getInstance().running;
-	if (setjmp(*running->context) == 0) {
-		blockedOnSemaphore->add(running);
+	if (setjmp(Kernel::getInstance().running->context) == 0) {
+		blockedOnSemaphore->add(Kernel::getInstance().running);
 		Kernel::getInstance().running = Scheduler::get();
-		longjmp(*Kernel::getInstance().running->context, 1);
+		longjmp(Kernel::getInstance().running->context, 1);
 	} else return;
 }
 
 void KernelSem::unblock() {
 	List<PCB>::Iterator it = blockedOnSemaphore->begin();
 	PCB* next = *blockedOnSemaphore->remove(it);
+	TRACE(("U unblock(), next ima id = ", next->getLocalId()));
 	Scheduler::put(next);
 }
 

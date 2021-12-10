@@ -12,7 +12,7 @@ ID PCB::globalId = 0;
 
 PCB::PCB()
 : state(PCB::ready), sp(0), ss(0), bp(0), timeSlice(0), unlimited(1),
-  waitingToComplete(), context(new jmp_buf[1]), stack(0), myThread(0), localId(0) {
+  waitingToComplete(), stack(0), myThread(0), localId(0) {
 }
 
 PCB::PCB(Thread* myThread, StackSize stackSize, Time timeSlice) :
@@ -20,7 +20,6 @@ PCB::PCB(Thread* myThread, StackSize stackSize, Time timeSlice) :
 		timeSlice(timeSlice),
 		unlimited(timeSlice ? 0 : 1),
 		waitingToComplete(),
-		context(new jmp_buf[1]),
 		stack(new unsigned[stackSize]),
 		myThread(myThread),
 		localId(++globalId) {
