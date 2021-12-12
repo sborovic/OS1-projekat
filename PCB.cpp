@@ -66,7 +66,6 @@ PCB::~PCB() {
 	for(; it != end && (*it)->localId != localId ; ++it);
 	Kernel::getInstance().PCBsById->remove(it);
 	delete stack;
-	delete context;
 
 }
 

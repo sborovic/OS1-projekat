@@ -3,6 +3,7 @@
 #include "PCB.h"
 #include "list.h"
 #include "debug.h"
+#include "SCHEDULE.H"
 
 int userMain(int, char*[]);
 /*
@@ -66,15 +67,23 @@ int Kernel::isLocked() const {
 	return locked != 0;
 }
 
+void Kernel::nextRunning() {
+	PCB* next = Scheduler::get();
+	if (next == 0) next = idleThread->getPCB();
+	running = next;
+}
+
 /*
  * Klasa IdleThread
  */
-Kernel::IdleThread::IdleThread() : Thread() {}
+Kernel::IdleThread::IdleThread() : Thread(4096, 1) {}
 
 Kernel::IdleThread::~IdleThread() {}
 
 void Kernel::IdleThread::run() {
-	while(1);
+	while(1) {
+		//TRACE(("\nUNUTAR IDLE THREAD!!!!!!!!!!"));
+	}
 }
 
 /*

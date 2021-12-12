@@ -8,12 +8,10 @@ int syncPrintf(const char *format, ...)
 {
 	int res;
 	va_list args;
-	LOCK
-	//Kernel::getInstance().lock();
+	Kernel::getInstance().lock();
 	va_start(args, format);
 	res = vprintf(format, args);
 	va_end(args);
-	UNLOCK
-	//Kernel::getInstance().unlock();
+	Kernel::getInstance().unlock();
 	return res;
 }

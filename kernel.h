@@ -62,7 +62,7 @@ public:
 	int isLocked() const;
 	void lock();
 	void unlock();
-	void setRunning(PCB* running);
+	void nextRunning();
 	int volatile context_switch_on_demand;
 	PCB* volatile running; // naveden posle mainPCB
 	int volatile dispatched;

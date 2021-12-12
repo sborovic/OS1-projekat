@@ -44,6 +44,13 @@ void interrupt timer(...) {
 			Kernel::getInstance().running->sp = tsp;
 			Kernel::getInstance().running->bp = tbp;
 
+#if DEBUG
+			Kernel::getInstance().lock();
+			cout << "\ntimer(): sacuvao sam ss, sp, bp za nit sa id = "
+					<< Kernel::getInstance().running->getLocalId() << endl;
+			Kernel::getInstance().unlock();
+			asm cli;
+#endif /* end of DEBUG */
 			// Trenutnu nit stavi u Scheduler ako je i dalje spremna
 			if (Kernel::getInstance().running->state == PCB::ready) {
 				Scheduler::put(Kernel::getInstance().running);
@@ -54,7 +61,7 @@ void interrupt timer(...) {
 			/* DEBUG */
 #if DEBUG
 			Kernel::getInstance().lock();
-			cout << "\ntimer(): postavljamo running na nit sa id="
+			cout << "\ntimer(): postavljamo running na nit sa id = "
 					<< Kernel::getInstance().running->getLocalId() << endl;
 			Kernel::getInstance().unlock();
 			asm cli;
