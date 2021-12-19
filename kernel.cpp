@@ -6,7 +6,8 @@
 #include "SCHEDULE.H"
 #include "kernsem.h"
 
-int userMain(int, char*[]);
+int userMain(int, char*[]); // Funkcija korisnickog programa
+
 /*
  * Klasa Kernel
  */
@@ -19,8 +20,8 @@ Kernel::Kernel(int argc, char* argv[]) :
 		PCBsById(new List<PCB>),
 		idleThread(new IdleThread()),
 		userMainThread(new UserMainThread(argc, argv, ret)),
-		context_switch_on_demand(0),
 		running(mainPCB),
+		context_switch_on_demand(0),
 		dispatched(0),
 		semaphores(new List<KernelSem>) {
 	userMainThread->start();
@@ -38,18 +39,6 @@ Kernel::~Kernel() {
 Kernel& Kernel::getInstance(int argc, char* argv[]) {
 	static Kernel instance(argc, argv);
 	return instance;
-}
-
-Kernel::IdleThread* Kernel::getIdleThread() const {
-	return idleThread;
-}
-
-PCB* Kernel::getMainPCB() const {
-	return mainPCB;
-}
-
-Thread* Kernel::getUserMainThread() const {
-	return userMainThread;
 }
 
 int Kernel::getReturnValue() const {

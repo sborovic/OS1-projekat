@@ -56,16 +56,13 @@ private:
 public:
 	inline static Kernel& getInstance(int argc = 0, char* argv[] = 0);
 	~Kernel();
-	PCB* getMainPCB() const;
-	IdleThread* getIdleThread() const;
-	Thread* getUserMainThread() const;
 	int getReturnValue() const;
 	int isLocked() const;
 	void lock();
 	void unlock();
 	void updateRunning();
-	int volatile context_switch_on_demand;
 	PCB* volatile running; // naveden posle mainPCB
+	int volatile context_switch_on_demand;
 	int volatile dispatched;
 	List<KernelSem>* semaphores;
 };

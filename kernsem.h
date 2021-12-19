@@ -10,8 +10,8 @@ public:
 	int wait(Time maxTimeToWait);
 	void signal();
 	~KernelSem();
-	int decrement();
-	static void interrupt decrementSemaphores();
+	void tick();
+	static void tickSemaphores();
 private:
 	void unblock();
 	friend class Semaphore;
@@ -24,20 +24,23 @@ private:
 	class BaseDecorator {
 	public:
 		BaseDecorator(PCB* runnning);
-		virtual void tick();
+		virtual ~BaseDecorator();
+		virtual int tick() = 0;
 		PCB* running;
 	};
-	class AlertDecorator {
+	class AlertDecorator : public BaseDecorator {
 	public:
 		AlertDecorator(PCB* running);
-		virtual void tick();
+		virtual int tick();
 	};
-	class SleepyDecorator {
-		SleepyDecorator(PCB* running, Time timeToWait);
-		virtual void tick();
+	class SleepyDecorator : public BaseDecorator {
+	public:
+		SleepyDecorator(PCB* running, Time timeToWait, int* returnValue);
+		virtual int tick();
 		Time timeToWait;
+		int* returnValue;
 	};
-	List<PCB>* blockedOnSemaphore;
+	List<BaseDecorator>* blockedOnSemaphore;
 };
 
 #endif /* _KERNSEM_H_ */
