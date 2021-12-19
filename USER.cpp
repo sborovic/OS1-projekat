@@ -35,7 +35,7 @@ void TestThread::run()
 {
 	syncPrintf("Thread waits for 10 units of time...\n");
 	t=0;
-	s.wait(1);
+	s.wait(10);
 	syncPrintf("Thread finished.\n");
 	s.signal();
 }

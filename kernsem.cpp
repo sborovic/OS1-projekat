@@ -5,6 +5,7 @@
 #include "SCHEDULE.H"
 #include "debug.h"
 #include "thread.h"
+#include <stdlib.h>
 
 /*
  * Klasa BaseDecorator
@@ -12,8 +13,11 @@
 KernelSem::BaseDecorator::BaseDecorator(PCB* running) : running(running) {}
 
 KernelSem::BaseDecorator::~BaseDecorator() {
+	TRACE(("\nulaz u dtor BaseDecorator"));
 	running->state = PCB::ready;
 	Scheduler::put(running);
+	dispatch();
+	TRACE(("\nizlaz iz dtor BaseDecorator"));
 }
 
 /*
@@ -21,6 +25,7 @@ KernelSem::BaseDecorator::~BaseDecorator() {
  */
 KernelSem::AlertDecorator::AlertDecorator(PCB* running) : BaseDecorator(running) {
 	running->state = PCB::blocked;
+	TRACE(("ctor AlertDecorator"));
 }
 int KernelSem::AlertDecorator::tick() {
 	return 0;
@@ -32,8 +37,11 @@ int KernelSem::AlertDecorator::tick() {
 KernelSem::SleepyDecorator::SleepyDecorator(PCB* running, Time timeToWait, int* returnValue)
 : BaseDecorator(running), timeToWait(timeToWait), returnValue(returnValue) {
 	running->state = PCB::sleeping;
+	TRACE(("ctor Sleepy DEcorator"));
 }
 int KernelSem::SleepyDecorator::tick() {
+	TRACE(("\nU SleepyDEc TICKU!!"));
+	TRACE(("\nu sldec:tick:timetowait = %d", timeToWait));
 	if (--timeToWait == 0) {
 		*returnValue = 0;
 		return 1;
@@ -49,15 +57,21 @@ int KernelSem::SleepyDecorator::tick() {
 KernelSem::KernelSem(int init) {
 	val = init;
 	blockedOnSemaphore = new List<BaseDecorator>;
+	TRACE(("\nDodaje u semaphores listu this/...."));
+	Kernel::getInstance().semaphores->add(this);
 }
 
 KernelSem::~KernelSem() {
 	delete blockedOnSemaphore;
+	List<KernelSem>::Iterator it = Kernel::getInstance().semaphores->begin(),
+			end = Kernel::getInstance().semaphores->end();
+	for(; it != end && (*it) != this ; ++it);
+	Kernel::getInstance().semaphores->remove(it);
 }
 
 int KernelSem::wait(Time maxTimeToWait) {
 	Kernel::getInstance().lock();
-	TRACE(("\npocetak KernelSem::wait(), val = %d", val));
+	TRACE(("\npocetak KernelSem::wait(), val = %d, maxTimeToWait = %d", val, maxTimeToWait));
 	int returnValue = 1;
 	if (--val < 0) {
 		PCB* running = Kernel::getInstance().running;
@@ -94,7 +108,7 @@ void KernelSem::signal() {
 }
 
 void KernelSem::tick() {
-	//TRACE(("u KernelSem::decrement"));
+	TRACE(("u KernelSem::tick"));
 	List<BaseDecorator>::Iterator it = blockedOnSemaphore->begin();
 	for (; it != blockedOnSemaphore->end(); ++it){
 		if ((*it)->tick() == 1) {
@@ -105,6 +119,10 @@ void KernelSem::tick() {
 }
 
 void KernelSem::tickSemaphores() {
+	Kernel::getInstance().lock();
+	TRACE(("\nulazim u tickSemaphores"));
 	List<KernelSem>::Iterator it = Kernel::getInstance().semaphores->begin();
 	for (; it != Kernel::getInstance().semaphores->end(); ++it) (*it)->tick();
+	TRACE(("\nizlazim iz tickSemaphores"));
+	Kernel::getInstance().unlock();
 }

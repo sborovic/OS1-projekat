@@ -60,9 +60,11 @@ int Kernel::isLocked() const {
 }
 
 void Kernel::updateRunning() {
+	Kernel::getInstance().lock();
 	PCB* next = Scheduler::get();
 	if (next == 0) next = idleThread->getPCB();
 	running = next;
+	Kernel::getInstance().unlock();
 }
 
 /*
