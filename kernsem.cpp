@@ -10,13 +10,15 @@
 /*
  * Klasa BaseDecorator
  */
-KernelSem::BaseDecorator::BaseDecorator(PCB* running) : running(running) {}
+KernelSem::BaseDecorator::BaseDecorator(PCB* running) : running(running) {
+	TRACE(("\nU Base decorator ubacujem PCB sa id = %d", running->getLocalId()));
+}
 
 KernelSem::BaseDecorator::~BaseDecorator() {
-	TRACE(("\nulaz u dtor BaseDecorator"));
-	running->state = PCB::ready;
-	Scheduler::put(running);
-	dispatch();
+	TRACE(("\nulaz u dtor BaseDecorator, operisem sa running sa id = %d", running->getLocalId()));
+
+	this->running->state = PCB::ready;
+	//Scheduler::put(this->running);
 	TRACE(("\nizlaz iz dtor BaseDecorator"));
 }
 
@@ -112,6 +114,7 @@ void KernelSem::tick() {
 	List<BaseDecorator>::Iterator it = blockedOnSemaphore->begin();
 	for (; it != blockedOnSemaphore->end(); ++it){
 		if ((*it)->tick() == 1) {
+			TRACE(("\nUnutar kernsem tick, pre delte it...."));
 			delete *it;
 			it = blockedOnSemaphore->remove(it);
 		}

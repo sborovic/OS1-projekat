@@ -87,8 +87,10 @@ void interrupt timer(...) {
 
 	// Poziv izvorne prekidne rutine tajmera
 	if(!Kernel::getInstance().dispatched) {
-		KernelSem::tickSemaphores();
-		tick();
+		if (!Kernel::getInstance().isLocked()) {
+			KernelSem::tickSemaphores();
+			tick();
+		}
 		asm int 60h;
 	} else Kernel::getInstance().dispatched = 0;
 }
