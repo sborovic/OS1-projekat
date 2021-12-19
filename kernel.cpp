@@ -4,6 +4,7 @@
 #include "list.h"
 #include "debug.h"
 #include "SCHEDULE.H"
+#include "kernsem.h"
 
 int userMain(int, char*[]);
 /*
@@ -20,12 +21,14 @@ Kernel::Kernel(int argc, char* argv[]) :
 		userMainThread(new UserMainThread(argc, argv, ret)),
 		context_switch_on_demand(0),
 		running(mainPCB),
-		dispatched(0) {
+		dispatched(0),
+		semaphores(new List<KernelSem>) {
 	userMainThread->start();
 	oldISR = timerInit();
 }
 
 Kernel::~Kernel() {
+	delete semaphores;
 	delete userMainThread;
 	delete idleThread;
 	delete PCBsById;
@@ -67,7 +70,7 @@ int Kernel::isLocked() const {
 	return locked != 0;
 }
 
-void Kernel::nextRunning() {
+void Kernel::updateRunning() {
 	PCB* next = Scheduler::get();
 	if (next == 0) next = idleThread->getPCB();
 	running = next;
@@ -100,3 +103,4 @@ Kernel::UserMainThread::~UserMainThread() {
 void Kernel::UserMainThread::run() {
 	ret = userMain(argc, argv);
 }
+

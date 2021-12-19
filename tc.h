@@ -3,8 +3,8 @@
 
 #include "iostream.h"
 
-#include "thr_mem.h"
-class TestClass : ThrMem {
+#include "safemem.h"
+class TestClass : SafeMemory {
 public:
 	TestClass();
 	int a;

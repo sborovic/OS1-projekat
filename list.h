@@ -1,7 +1,7 @@
 #ifndef _list_h_
 #define _list_h_
 
-#include "thr_mem.h"
+#include "safemem.h"
 
 // Napomena: Sabloni za klase su i deklarisani i definisani u ovom .h fajlu
 
@@ -9,7 +9,7 @@
  * Node<T> - Deklaracija
  */
 template <class T>
-class Node : public ThrMem  {
+class Node : public SafeMemory  {
 public:
 	Node *prev, *next;
 	T* value;
@@ -29,7 +29,7 @@ private:
  * List<T> - Definicija
  */
 template <class T>
-class List : public ThrMem {
+class List : public SafeMemory {
 public:
 	class Iterator {
 	public:

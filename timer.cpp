@@ -5,6 +5,7 @@
 #include "PCB.h"
 #include "SCHEDULE.H"
 #include "debug.h"
+#include "kernsem.h"
 
 // Ove pomocne promenljive se koriste unutar asm instrukcija
 // Moraju biti globalne jer se asm instrukcijama invalidira tekuci bp
@@ -28,9 +29,8 @@ void timerRestore(pInterrupt oldISR) {
 }
 
 void interrupt timer(...) {
-	tick();
 	if (!Kernel::getInstance().context_switch_on_demand && cnt != 0) cnt--;
-	if ((cnt == 0 && !unlimited)|| Kernel::getInstance().context_switch_on_demand) {
+	if ((cnt == 0 && !unlimited) || Kernel::getInstance().context_switch_on_demand) {
 		if (!Kernel::getInstance().isLocked()) {
 			Kernel::getInstance().context_switch_on_demand = 0;
 			// Sacuvaj kontekst trenutne niti u njen PCB
@@ -56,7 +56,8 @@ void interrupt timer(...) {
 				Scheduler::put(Kernel::getInstance().running);
 			}
 			// Izaberi novu nit
-			Kernel::getInstance().running = Scheduler::get();
+			//Kernel::getInstance().running = Scheduler::get();
+			Kernel::getInstance().updateRunning();
 
 			/* DEBUG */
 #if DEBUG
@@ -86,7 +87,11 @@ void interrupt timer(...) {
 
 	// Poziv izvorne prekidne rutine tajmera
 	if(!Kernel::getInstance().dispatched) {
+		//Kernel::getInstance().decrementSemaphores();
+		KernelSem::decrementSemaphores();
+		tick();
 		asm int 60h;
 	} else Kernel::getInstance().dispatched = 0;
 }
+
 

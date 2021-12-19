@@ -12,6 +12,7 @@
 #include "list.h"
 #include "timer.h"
 class PCB;
+class KernelSem;
 
 // Klasa Kernel implementirana je kao Unikat
 class Kernel {
@@ -62,10 +63,11 @@ public:
 	int isLocked() const;
 	void lock();
 	void unlock();
-	void nextRunning();
+	void updateRunning();
 	int volatile context_switch_on_demand;
 	PCB* volatile running; // naveden posle mainPCB
 	int volatile dispatched;
+	List<KernelSem>* semaphores;
 };
 
 #endif /* _kernel_h_ */

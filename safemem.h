@@ -1,5 +1,5 @@
-#ifndef _thrmem_h_
-#define _thrmem_h_
+#ifndef _safemem_h_
+#define _safemem_h_
 
 #include <stddef.h>
 
@@ -9,7 +9,7 @@
  * To su klase: List<T>, Node<T>, PCB
  */
 
-class ThrMem {
+class SafeMemory {
 public:
 	static void* operator new(size_t size);
 	static void operator delete(void* ptr);

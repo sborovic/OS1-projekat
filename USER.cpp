@@ -6,17 +6,15 @@
 #include "kernel.h"
 #include "PCB.h"
 #include <iostream.h>
-
-
-
+#include "list.h"
 /*
- 	 Test 8: Semafori bez realizacije spavanja
+ 	 Test 9: Semafori sa spavanjem
 */
 
-const int n = 5;
-int count = 10;
+const int n = 1;
+int t=-1;
 
-Semaphore s(2);
+Semaphore s(0);
 
 class TestThread : public Thread
 {
@@ -35,17 +33,23 @@ protected:
 
 void TestThread::run()
 {
-	s.wait(0);
-	cout<<"Thread "<<getId()<<" in critical section."<<endl;
-	for(unsigned int i=0;i<64000;i++)
-		for(unsigned int j=0;j<64000;j++);
+	syncPrintf("Thread waits for 10 units of time...\n");
+	t=0;
+	s.wait(1);
+	syncPrintf("Thread finished.\n");
 	s.signal();
 }
 
-void tick(){}
+void tick()
+{
+	t++;
+	if(t)
+		syncPrintf("%d\n",t);
+}
 
 int userMain(int argc, char** argv)
 {
+	List<int> test;
 	syncPrintf("Test starts.\n");
 	TestThread t[n];
 	int i;

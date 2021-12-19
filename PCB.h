@@ -3,9 +3,9 @@
 
 #include "thread.h"
 #include "list.h"
-#include "thr_mem.h"
+#include "safemem.h"
 
-class PCB : public ThrMem {
+class PCB : public SafeMemory {
 public:
 	void print();
 	PCB();
@@ -13,13 +13,14 @@ public:
 	ID getLocalId() const;
 	static void wrapper();
 	enum State {
-		initial, ready, blocked, finished
+		initial, ready, blocked, finished, sleeping
 	};
 	State state;
 	unsigned sp, ss, bp;
 	Time timeSlice;
 	int unlimited;
 	List<PCB> waitingToComplete;
+	Time timeToWait;
 private:
 	PCB(PCB const&);
 	PCB& operator=(PCB const&);
