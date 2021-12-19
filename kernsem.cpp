@@ -15,9 +15,9 @@ KernelSem::BaseDecorator::BaseDecorator(PCB* running) : running(running) {
 }
 
 KernelSem::BaseDecorator::~BaseDecorator() {
-	TRACE(("\nulaz u dtor BaseDecorator, operisem sa running sa id = %d", running->getLocalId()));
+	//TRACE(("\nulaz u dtor BaseDecorator, operisem sa running sa id = %d", running->getLocalId()));
 
-	this->running->state = PCB::ready;
+	//this->running->state = PCB::ready;
 	//Scheduler::put(this->running);
 	TRACE(("\nizlaz iz dtor BaseDecorator"));
 }
@@ -112,12 +112,12 @@ void KernelSem::signal() {
 void KernelSem::tick() {
 	TRACE(("u KernelSem::tick"));
 	List<BaseDecorator>::Iterator it = blockedOnSemaphore->begin();
-	for (; it != blockedOnSemaphore->end(); ++it){
+	while(it != blockedOnSemaphore->end()) {
 		if ((*it)->tick() == 1) {
 			TRACE(("\nUnutar kernsem tick, pre delte it...."));
 			delete *it;
 			it = blockedOnSemaphore->remove(it);
-		}
+		} else ++it;
 	}
 }
 
