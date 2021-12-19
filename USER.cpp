@@ -7,20 +7,24 @@
 #include "PCB.h"
 #include <iostream.h>
 #include "list.h"
+
+
 /*
- 	 Test 9: Semafori sa spavanjem
+ 	 Test 10: Semafori sa spavanjem 2
 */
 
-const int n = 10;
 int t=-1;
 
 Semaphore s(0);
 
 class TestThread : public Thread
 {
+private:
+	Time waitTime;
+
 public:
 
-	TestThread(): Thread(){}
+	TestThread(Time WT): Thread(), waitTime(WT){}
 	~TestThread()
 	{
 		waitToComplete();
@@ -33,11 +37,10 @@ protected:
 
 void TestThread::run()
 {
-	syncPrintf("Thread waits for 10 units of time...\n");
-	t=0;
-	s.wait(10);
-	syncPrintf("Thread finished.\n");
+	syncPrintf("Thread %d waits for %d units of time.\n",getId(),waitTime);
+	int r = s.wait(waitTime);
 	s.signal();
+	syncPrintf("Thread %d finished: r = %d\n", getId(),r);
 }
 
 void tick()
@@ -49,18 +52,15 @@ void tick()
 
 int userMain(int argc, char** argv)
 {
-	List<int> test;
 	syncPrintf("Test starts.\n");
-	TestThread t[n];
-	int i;
-	for(i=0;i<n;i++)
-	{
-		t[i].start();
-	}
-	for(i=0;i<n;i++)
-	{
-		t[i].waitToComplete();
-	}
+	TestThread t1(15),t2(10),t3(30);
+	t1.start();
+	t2.start();
+	t3.start();
+	s.wait(5);
+	s.signal();
+	s.wait(0);
+	s.signal();
 	syncPrintf("Test ends.\n");
 	return 0;
 }
