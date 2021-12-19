@@ -116,16 +116,17 @@ void KernelSem::tick() {
 		if ((*it)->tick() == 1) {
 			TRACE(("\nUnutar kernsem tick, pre delte it...."));
 			delete *it;
+			++val;
 			it = blockedOnSemaphore->remove(it);
 		} else ++it;
 	}
 }
 
 void KernelSem::tickSemaphores() {
-	Kernel::getInstance().lock();
+//	Kernel::getInstance().lock();
 	TRACE(("\nulazim u tickSemaphores"));
 	List<KernelSem>::Iterator it = Kernel::getInstance().semaphores->begin();
 	for (; it != Kernel::getInstance().semaphores->end(); ++it) (*it)->tick();
 	TRACE(("\nizlazim iz tickSemaphores"));
-	Kernel::getInstance().unlock();
+	//Kernel::getInstance().unlock();
 }

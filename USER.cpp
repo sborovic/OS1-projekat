@@ -11,7 +11,7 @@
  	 Test 9: Semafori sa spavanjem
 */
 
-const int n = 1;
+const int n = 10;
 int t=-1;
 
 Semaphore s(0);
