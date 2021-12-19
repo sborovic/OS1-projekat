@@ -76,7 +76,7 @@ Kernel::IdleThread::~IdleThread() {}
 
 void Kernel::IdleThread::run() {
 	while(1) {
-		//TRACE(("\nUNUTAR IDLE THREAD!!!!!!!!!!"));
+	//	TRACE(("\nUNUTAR IDLE THREAD!!!!!!!!!!"));
 	}
 }
 

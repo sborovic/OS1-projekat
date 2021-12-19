@@ -17,8 +17,8 @@ KernelSem::BaseDecorator::BaseDecorator(PCB* running) : running(running) {
 KernelSem::BaseDecorator::~BaseDecorator() {
 	//TRACE(("\nulaz u dtor BaseDecorator, operisem sa running sa id = %d", running->getLocalId()));
 
-	//this->running->state = PCB::ready;
-	//Scheduler::put(this->running);
+	this->running->state = PCB::ready;
+	Scheduler::put(this->running);
 	TRACE(("\nizlaz iz dtor BaseDecorator"));
 }
 
