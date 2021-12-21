@@ -7,13 +7,13 @@ class PCB;
 
 class KernelSem {
  public:
+  static void tickSemaphores();
+ private:
   int wait(Time maxTimeToWait);
   void signal();
   ~KernelSem();
   void tick();
-  static void tickSemaphores();
 
- private:
   void unblock();
   friend class Semaphore;
   // KernelSem je moguce konstruisati samo unutar Semaphore

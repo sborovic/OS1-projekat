@@ -1,21 +1,19 @@
 #include "event.h"
+#include "kernelev.h"
 
 Event::Event(IVTNo ivtNo) {
-
+	myImpl = new KernelEv(ivtNo);
 }
 
+Event::~Event() {
+	delete myImpl;
+}
 
+void Event::wait() {
+	myImpl->wait();
+}
 
-//typedef unsigned char IVTNo;
-//class KernelEv;
-//class Event {
-// public:
-//  Event(IVTNo ivtNo);
-//  ~Event();
-//  void wait();
-//
-// protected:
-//  friend class KernelEv;
-//  void signal();  // can call KernelEv
-// private:
-//  KernelEv *myImpl;
+void Event::signal(){
+	myImpl->signal();
+}
+
