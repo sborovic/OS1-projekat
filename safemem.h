@@ -10,7 +10,7 @@
  */
 
 class SafeMemory {
-public:
+ public:
   static void *operator new(size_t size);
   static void operator delete(void *ptr);
 };

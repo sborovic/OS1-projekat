@@ -1,4 +1,5 @@
 #include "kernel.h"
+
 #include "PCB.h"
 #include "SCHEDULE.H"
 #include "debug.h"
@@ -6,16 +7,23 @@
 #include "list.h"
 #include "timer.h"
 
-int userMain(int, char *[]); // Funkcija korisnickog programa
+int userMain(int, char *[]);  // Funkcija korisnickog programa
 
 /*
  * Klasa Kernel
  */
 Kernel::Kernel(int argc, char *argv[])
-    : argc(argc), argv(argv), ret(0), locked(0), mainPCB(new PCB()),
-      PCBsById(new List<PCB>), idleThread(new IdleThread()),
-      userMainThread(new UserMainThread(argc, argv, ret)), running(mainPCB),
-      context_switch_on_demand(0), dispatched(0),
+    : argc(argc),
+      argv(argv),
+      ret(0),
+      locked(0),
+      mainPCB(new PCB()),
+      PCBsById(new List<PCB>),
+      idleThread(new IdleThread()),
+      userMainThread(new UserMainThread(argc, argv, ret)),
+      running(mainPCB),
+      context_switch_on_demand(0),
+      dispatched(0),
       semaphores(new List<KernelSem>) {
   userMainThread->start();
   oldISR = timerInit();
@@ -49,8 +57,7 @@ int Kernel::isLocked() const { return locked != 0; }
 void Kernel::updateRunning() {
   Kernel::getInstance().lock();
   PCB *next = Scheduler::get();
-  if (next == 0)
-    next = idleThread->getPCB();
+  if (next == 0) next = idleThread->getPCB();
   running = next;
   Kernel::getInstance().unlock();
 }

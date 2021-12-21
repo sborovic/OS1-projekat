@@ -1,4 +1,5 @@
 #include "semaphor.h"
+
 #include "kernsem.h"
 
 Semaphore::Semaphore(int init) { myImpl = new KernelSem(init); }

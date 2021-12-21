@@ -1,8 +1,10 @@
 #include "PCB.h"
+
+#include <dos.h>
+
 #include "SCHEDULE.H"
 #include "debug.h"
 #include "kernel.h"
-#include <dos.h>
 
 // Inicijalizacija statickih promenljivih
 
@@ -11,18 +13,30 @@ ID PCB::globalId = 0;
 // Definicije
 
 PCB::PCB()
-    : state(PCB::ready), sp(0), ss(0), bp(0), timeSlice(0), unlimited(1),
-      waitingToComplete(), stack(0), myThread(0), localId(0) {}
+    : state(PCB::ready),
+      sp(0),
+      ss(0),
+      bp(0),
+      timeSlice(0),
+      unlimited(1),
+      waitingToComplete(),
+      stack(0),
+      myThread(0),
+      localId(0) {}
 
 PCB::PCB(Thread *myThread, StackSize stackSize, Time timeSlice)
-    : state(PCB::initial), timeSlice(timeSlice), unlimited(timeSlice ? 0 : 1),
-      waitingToComplete(), stack(new unsigned[stackSize]), myThread(myThread),
+    : state(PCB::initial),
+      timeSlice(timeSlice),
+      unlimited(timeSlice ? 0 : 1),
+      waitingToComplete(),
+      stack(new unsigned[stackSize]),
+      myThread(myThread),
       localId(++globalId) {
-  const StackSize indexOfPSW = stackSize - 1, // dno steka
+  const StackSize indexOfPSW = stackSize - 1,  // dno steka
       indexOfCS = stackSize - 2, indexOfIP = stackSize - 3,
-                  indexOfStackTop = stackSize - 12; // vrh steka
+                  indexOfStackTop = stackSize - 12;  // vrh steka
 
-  stack[indexOfPSW] = 0x200; // I = 1
+  stack[indexOfPSW] = 0x200;  // I = 1
   stack[indexOfCS] = FP_SEG(PCB::wrapper);
   stack[indexOfIP] = FP_OFF(PCB::wrapper);
 
@@ -57,8 +71,7 @@ void PCB::wrapper() {
 ID PCB::getLocalId() const { return localId; }
 
 PCB::~PCB() {
-  if (myThread == 0)
-    return; // u pitanju je mainPCB
+  if (myThread == 0) return;  // u pitanju je mainPCB
   List<PCB>::Iterator it = Kernel::getInstance().PCBsById->begin(),
                       end = Kernel::getInstance().PCBsById->end();
   for (; it != end && (*it)->localId != localId; ++it)

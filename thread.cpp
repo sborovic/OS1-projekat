@@ -1,4 +1,5 @@
 #include "thread.h"
+
 #include "PCB.h"
 #include "SCHEDULE.H"
 #include "debug.h"
@@ -13,8 +14,7 @@ Thread::Thread(StackSize stackSize, Time timeSlice) {
 Thread::~Thread() { delete myPCB; }
 
 void Thread::start() {
-  if (myPCB->state != PCB::initial)
-    return;
+  if (myPCB->state != PCB::initial) return;
   myPCB->state = PCB::ready;
   Scheduler::put(myPCB);
 }
@@ -26,8 +26,7 @@ Thread *Thread::getThreadById(ID id) {
                       end = Kernel::getInstance().PCBsById->end();
   for (; it != end && (*it)->localId != id; ++it)
     ;
-  if (it == end)
-    TRACE(("\ngetThreadById ERROR!"));
+  if (it == end) TRACE(("\ngetThreadById ERROR!"));
   return (*it)->myThread;
 }
 

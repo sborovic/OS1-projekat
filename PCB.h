@@ -6,7 +6,7 @@
 #include "thread.h"
 
 class PCB : public SafeMemory {
-public:
+ public:
   void print();
   PCB();
   ~PCB();
@@ -20,7 +20,7 @@ public:
   List<PCB> waitingToComplete;
   Time timeToWait;
 
-private:
+ private:
   PCB(PCB const &);
   PCB &operator=(PCB const &);
   // Navedeni privatni konstruktor bice dostupan samo klasi Thread

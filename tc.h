@@ -2,10 +2,9 @@
 #define _tc_h_
 
 #include "iostream.h"
-
 #include "safemem.h"
 class TestClass : SafeMemory {
-public:
+ public:
   TestClass();
   int a;
   ~TestClass();

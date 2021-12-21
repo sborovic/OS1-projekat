@@ -1,11 +1,13 @@
 #include "timer.h"
+
+#include <dos.h>
+#include <iostream.h>
+
 #include "PCB.h"
 #include "SCHEDULE.H"
 #include "debug.h"
 #include "kernel.h"
 #include "kernsem.h"
-#include <dos.h>
-#include <iostream.h>
 
 // Ove pomocne promenljive se koriste unutar asm instrukcija
 // Moraju biti globalne jer se asm instrukcijama invalidira tekuci bp
@@ -27,8 +29,7 @@ void timerRestore(pInterrupt oldISR) {
 }
 
 void interrupt timer(...) {
-  if (!Kernel::getInstance().context_switch_on_demand && cnt != 0)
-    cnt--;
+  if (!Kernel::getInstance().context_switch_on_demand && cnt != 0) cnt--;
   if ((cnt == 0 && !unlimited) ||
       Kernel::getInstance().context_switch_on_demand) {
     if (!Kernel::getInstance().isLocked()) {

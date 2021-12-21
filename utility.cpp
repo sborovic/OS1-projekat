@@ -1,8 +1,10 @@
 #include "utility.h"
-#include "kernel.h"
+
 #include <DOS.H>
 #include <STDARG.H>
 #include <STDIO.H>
+
+#include "kernel.h"
 
 int syncPrintf(const char *format, ...) {
   int res;

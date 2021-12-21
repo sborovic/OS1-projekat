@@ -1,11 +1,13 @@
 #include "kernsem.h"
+
+#include <stdlib.h>
+
 #include "PCB.h"
 #include "SCHEDULE.H"
 #include "debug.h"
 #include "kernel.h"
 #include "list.h"
 #include "thread.h"
-#include <stdlib.h>
 
 /*
  * Klasa BaseDecorator
@@ -131,8 +133,7 @@ void KernelSem::tickSemaphores() {
   //	Kernel::getInstance().lock();
   TRACE(("\nulazim u tickSemaphores"));
   List<KernelSem>::Iterator it = Kernel::getInstance().semaphores->begin();
-  for (; it != Kernel::getInstance().semaphores->end(); ++it)
-    (*it)->tick();
+  for (; it != Kernel::getInstance().semaphores->end(); ++it) (*it)->tick();
   TRACE(("\nizlazim iz tickSemaphores"));
   // Kernel::getInstance().unlock();
 }

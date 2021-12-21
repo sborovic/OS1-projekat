@@ -15,22 +15,22 @@ class KernelSem;
 
 // Klasa Kernel implementirana je kao Unikat
 class Kernel {
-private:
+ private:
   Kernel(int argc, char *argv[]);
   Kernel(Kernel const &);
   void operator=(Kernel const &);
   class IdleThread : public Thread {
-  public:
+   public:
     IdleThread();
     virtual void run();
     virtual ~IdleThread();
 
-  private:
+   private:
     IdleThread(IdleThread const &);
     IdleThread &operator=(IdleThread const &);
   };
   class UserMainThread : public Thread {
-  public:
+   public:
     UserMainThread(int argc, char **argv, int &ret);
     virtual void run();
     virtual ~UserMainThread();
@@ -38,7 +38,7 @@ private:
     int argc;
     char **argv;
 
-  private:
+   private:
     UserMainThread(UserMainThread const &);
     UserMainThread &operator=(UserMainThread const &);
   };
@@ -46,17 +46,17 @@ private:
   char **argv;
   int ret;
   int volatile locked;
-  PCB *mainPCB; // Ovaj PCB ne ulazi u donju listu, a ima id = 0
-public:
+  PCB *mainPCB;  // Ovaj PCB ne ulazi u donju listu, a ima id = 0
+ public:
   // Ova lista mora biti konstruisana pre ma kog Threada
   List<PCB> *PCBsById;
 
-private:
-  IdleThread *idleThread; // Ima id = 1
-  Thread *userMainThread; // Ima id = 2
+ private:
+  IdleThread *idleThread;  // Ima id = 1
+  Thread *userMainThread;  // Ima id = 2
   pInterrupt oldISR;
 
-public:
+ public:
   inline static Kernel &getInstance(int argc = 0, char *argv[] = 0);
   ~Kernel();
   int getReturnValue() const;
@@ -64,7 +64,7 @@ public:
   void lock();
   void unlock();
   void updateRunning();
-  PCB *volatile running; // naveden posle mainPCB
+  PCB *volatile running;  // naveden posle mainPCB
   int volatile context_switch_on_demand;
   int volatile dispatched;
   List<KernelSem> *semaphores;

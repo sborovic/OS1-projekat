@@ -6,7 +6,6 @@ TestClass &TestClass::g() {
 TestClass::TestClass()
 
 {
-
   new int;
   cout << "\n!!!!ctor Testclass";
 }

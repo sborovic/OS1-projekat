@@ -1,12 +1,13 @@
+#include <iostream.h>
+#include <setjmp.h>
+#include <stdlib.h>
+
 #include "PCB.h"
 #include "kernel.h"
 #include "list.h"
 #include "semaphor.h"
 #include "thread.h"
 #include "utility.h"
-#include <iostream.h>
-#include <setjmp.h>
-#include <stdlib.h>
 
 /*
          Test 12: Semafori sa spavanjem 4
@@ -19,29 +20,27 @@ const int n = 15;
 Semaphore s(1);
 
 class TestThread : public Thread {
-private:
+ private:
   Time waitTime;
 
-public:
+ public:
   TestThread(Time WT) : Thread(), waitTime(WT) {}
   ~TestThread() { waitToComplete(); }
 
-protected:
+ protected:
   void run();
 };
 
 void TestThread::run() {
   syncPrintf("Thread %d waits for %d units of time.\n", getId(), waitTime);
   int r = s.wait(waitTime);
-  if (getId() % 2)
-    s.signal();
+  if (getId() % 2) s.signal();
   syncPrintf("Thread %d finished: r = %d\n", getId(), r);
 }
 
 void tick() {
   t++;
-  if (t)
-    syncPrintf("%d\n", t);
+  if (t) syncPrintf("%d\n", t);
 }
 
 int userMain(int argc, char **argv) {

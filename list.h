@@ -8,14 +8,15 @@
 /*
  * Node<T> - Deklaracija
  */
-template <class T> class Node : public SafeMemory {
-public:
+template <class T>
+class Node : public SafeMemory {
+ public:
   Node *prev, *next;
   T *value;
-  ~Node() { // syncPrintf("\ndtor node : %d", *value);
+  ~Node() {  // syncPrintf("\ndtor node : %d", *value);
   }
 
-private:
+ private:
   class List<T>;
   // Node<T> moguce je konstruisati jedino iz List<T> i nije ga moguce kopirati
   Node(List<T> &list, Node *prev, T *value, Node *next);
@@ -27,10 +28,11 @@ private:
 /*
  * List<T> - Definicija
  */
-template <class T> class List : public SafeMemory {
-public:
+template <class T>
+class List : public SafeMemory {
+ public:
   class Iterator {
-  public:
+   public:
     Iterator(Node<T> *node) : node(node) {}
     Iterator &operator++() {
       node = node->next;
@@ -48,7 +50,7 @@ public:
       ;
     }
 
-  private:
+   private:
     // Pokazivacu na Node<T> moguce je pristupiti samo iz List<T>
     // Objektu value tipa T sadrzanom u node moguc je javni pristup putem
     // iteratora
@@ -58,8 +60,7 @@ public:
 
   List() : head(0), tail(0), size(-1) { new Node<T>(*this, 0, 0, 0); }
   Iterator remove(Iterator &iterator) {
-    if (iterator == end())
-      return end();
+    if (iterator == end()) return end();
     Node<T> *temp = iterator.node;
     temp->next->prev = temp->prev;
     if (temp->prev == 0)
@@ -89,7 +90,7 @@ public:
     delete tail;
   }
 
-private:
+ private:
   // Zabranjeno je kopiranje List<T>
   List(List const &);
   List &operator=(List const &);
