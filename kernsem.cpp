@@ -4,10 +4,10 @@
 
 #include "PCB.h"
 #include "SCHEDULE.H"
-#include "debug.h"
 #include "kernel.h"
 #include "list.h"
 #include "thread.h"
+#include "debug.h"
 
 /*
  * Klasa BaseDecorator
@@ -60,13 +60,13 @@ int KernelSem::SleepyDecorator::tick() {
 
 KernelSem::KernelSem(int init) {
   val = init;
-  blockedOnSemaphore = new List<BaseDecorator>;
+ // blockedOnSemaphore = new List<BaseDecorator>;
   TRACE(("\nDodaje u semaphores listu this/...."));
   Kernel::getInstance().semaphores->add(this);
 }
 
 KernelSem::~KernelSem() {
-  delete blockedOnSemaphore;
+ // delete blockedOnSemaphore;
   List<KernelSem>::Iterator it = Kernel::getInstance().semaphores->begin(),
                             end = Kernel::getInstance().semaphores->end();
   for (; it != end && (*it) != this; ++it)
@@ -84,9 +84,9 @@ int KernelSem::wait(Time maxTimeToWait) {
     TRACE(
         ("\nubacujem u blockedOnSemaphore sa id = %d", running->getLocalId()));
     if (maxTimeToWait == 0) {
-      blockedOnSemaphore->add(new AlertDecorator(running));
+      blockedOnSemaphore.add(new AlertDecorator(running));
     } else {
-      blockedOnSemaphore->add(
+      blockedOnSemaphore.add(
           new SleepyDecorator(running, maxTimeToWait, &returnValue));
     }
     Kernel::getInstance().unlock();
@@ -101,9 +101,9 @@ int KernelSem::wait(Time maxTimeToWait) {
 
 void KernelSem::unblock() {
   TRACE(("\nUzimam iz blockedOnSemaphore...."));
-  List<BaseDecorator>::Iterator it = blockedOnSemaphore->begin();
+  List<BaseDecorator>::Iterator it = blockedOnSemaphore.begin();
   delete *it;
-  blockedOnSemaphore->remove(it);
+  blockedOnSemaphore.remove(it);
 }
 
 void KernelSem::signal() {
@@ -117,13 +117,13 @@ void KernelSem::signal() {
 
 void KernelSem::tick() {
   TRACE(("u KernelSem::tick"));
-  List<BaseDecorator>::Iterator it = blockedOnSemaphore->begin();
-  while (it != blockedOnSemaphore->end()) {
+  List<BaseDecorator>::Iterator it = blockedOnSemaphore.begin();
+  while (it != blockedOnSemaphore.end()) {
     if ((*it)->tick() == 1) {
       TRACE(("\nUnutar kernsem tick, pre delte it...."));
       delete *it;
       ++val;
-      it = blockedOnSemaphore->remove(it);
+      it = blockedOnSemaphore.remove(it);
     } else
       ++it;
   }

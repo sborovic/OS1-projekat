@@ -1,4 +1,4 @@
-#ifndef _KERNELEV_H_
-#define _KERNELEV_H_
+#ifndef _kernelev_h_
+#define _kernelev_h_
 
-#endif
+#endif /* _kernelev_h_ */

@@ -3,8 +3,8 @@
 #include <dos.h>
 
 #include "SCHEDULE.H"
-#include "debug.h"
 #include "kernel.h"
+#include "debug.h"
 
 // Inicijalizacija statickih promenljivih
 

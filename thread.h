@@ -31,4 +31,4 @@ class Thread {
 
 void dispatch();
 
-#endif
+#endif /* _thread_h_ */

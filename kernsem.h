@@ -1,5 +1,5 @@
-#ifndef _KERNSEM_H_
-#define _KERNSEM_H_
+#ifndef _kernsem_h_
+#define _kernsem_h_
 
 #include "list.h"
 #include "semaphor.h"
@@ -41,7 +41,7 @@ class KernelSem {
     Time timeToWait;
     int *returnValue;
   };
-  List<BaseDecorator> *blockedOnSemaphore;
+  List<BaseDecorator> blockedOnSemaphore;
 };
 
-#endif /* _KERNSEM_H_ */
+#endif /* _kernsem_h_ */

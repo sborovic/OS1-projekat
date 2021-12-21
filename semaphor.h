@@ -1,5 +1,5 @@
-#ifndef _SEMAPHOR_H_
-#define _SEMAPHOR_H_
+#ifndef _semaphor_h_
+#define _semaphor_h_
 
 typedef unsigned int Time;
 
@@ -15,4 +15,4 @@ class Semaphore {
   KernelSem *myImpl;
 };
 
-#endif /* _SEMAPHOR_H_ */
+#endif /* _semaphor_h_ */

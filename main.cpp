@@ -1,5 +1,5 @@
-#include "debug.h"
 #include "kernel.h"
+#include "debug.h"
 
 int main(int argc, char *argv[]) {
   // TRACE(("\nFirst line of main(), argc = %d, argv[0] = %s\n", argc,

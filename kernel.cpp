@@ -2,10 +2,10 @@
 
 #include "PCB.h"
 #include "SCHEDULE.H"
-#include "debug.h"
 #include "kernsem.h"
 #include "list.h"
 #include "timer.h"
+#include "debug.h"
 
 int userMain(int, char *[]);  // Funkcija korisnickog programa
 
