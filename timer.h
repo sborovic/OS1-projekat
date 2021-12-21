@@ -3,13 +3,10 @@
 
 typedef void interrupt (*pInterrupt)(...);
 
-pInterrupt
-timerInit();
+pInterrupt timerInit();
 void timerRestore(pInterrupt);
-void interrupt
-timer(...);
+void interrupt timer(...);
 
-void
-tick();
+void tick();
 
 #endif /* _timer_h_ */

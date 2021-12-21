@@ -9,11 +9,10 @@
  * To su klase: List<T>, Node<T>, PCB
  */
 
-class SafeMemory
-{
-public:
-  static void* operator new(size_t size);
-  static void operator delete(void* ptr);
+class SafeMemory {
+ public:
+  static void *operator new(size_t size);
+  static void operator delete(void *ptr);
 };
 
 #endif

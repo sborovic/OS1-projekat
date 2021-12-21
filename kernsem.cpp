@@ -12,14 +12,11 @@
 /*
  * Klasa BaseDecorator
  */
-KernelSem::BaseDecorator::BaseDecorator(PCB* running)
-  : running(running)
-{
+KernelSem::BaseDecorator::BaseDecorator(PCB *running) : running(running) {
   TRACE(("\nU Base decorator ubacujem PCB sa id = %d", running->getLocalId()));
 }
 
-KernelSem::BaseDecorator::~BaseDecorator()
-{
+KernelSem::BaseDecorator::~BaseDecorator() {
   // TRACE(("\nulaz u dtor BaseDecorator, operisem sa running sa id = %d",
   // running->getLocalId()));
 
@@ -31,34 +28,23 @@ KernelSem::BaseDecorator::~BaseDecorator()
 /*
  * Klasa AlertDecorator
  */
-KernelSem::AlertDecorator::AlertDecorator(PCB* running)
-  : BaseDecorator(running)
-{
+KernelSem::AlertDecorator::AlertDecorator(PCB *running)
+    : BaseDecorator(running) {
   running->state = PCB::blocked;
   TRACE(("ctor AlertDecorator"));
 }
-int
-KernelSem::AlertDecorator::tick()
-{
-  return 0;
-}
+int KernelSem::AlertDecorator::tick() { return 0; }
 
 /*
  * Klasa SleepyDecorator
  */
-KernelSem::SleepyDecorator::SleepyDecorator(PCB* running,
-                                            Time timeToWait,
-                                            int* returnValue)
-  : BaseDecorator(running)
-  , timeToWait(timeToWait)
-  , returnValue(returnValue)
-{
+KernelSem::SleepyDecorator::SleepyDecorator(PCB *running, Time timeToWait,
+                                            int *returnValue)
+    : BaseDecorator(running), timeToWait(timeToWait), returnValue(returnValue) {
   running->state = PCB::sleeping;
   TRACE(("ctor Sleepy DEcorator"));
 }
-int
-KernelSem::SleepyDecorator::tick()
-{
+int KernelSem::SleepyDecorator::tick() {
   TRACE(("\nU SleepyDEc TICKU!!"));
   TRACE(("\nu sldec:tick:timetowait = %d", timeToWait));
   if (--timeToWait == 0) {
@@ -72,16 +58,14 @@ KernelSem::SleepyDecorator::tick()
  * Klasa KernelSem
  */
 
-KernelSem::KernelSem(int init)
-{
+KernelSem::KernelSem(int init) {
   val = init;
   blockedOnSemaphore = new List<BaseDecorator>;
   TRACE(("\nDodaje u semaphores listu this/...."));
   Kernel::getInstance().semaphores->add(this);
 }
 
-KernelSem::~KernelSem()
-{
+KernelSem::~KernelSem() {
   delete blockedOnSemaphore;
   List<KernelSem>::Iterator it = Kernel::getInstance().semaphores->begin(),
                             end = Kernel::getInstance().semaphores->end();
@@ -90,23 +74,20 @@ KernelSem::~KernelSem()
   Kernel::getInstance().semaphores->remove(it);
 }
 
-int
-KernelSem::wait(Time maxTimeToWait)
-{
+int KernelSem::wait(Time maxTimeToWait) {
   Kernel::getInstance().lock();
-  TRACE(("\npocetak KernelSem::wait(), val = %d, maxTimeToWait = %d",
-         val,
+  TRACE(("\npocetak KernelSem::wait(), val = %d, maxTimeToWait = %d", val,
          maxTimeToWait));
   int returnValue = 1;
   if (--val < 0) {
-    PCB* running = Kernel::getInstance().running;
+    PCB *running = Kernel::getInstance().running;
     TRACE(
-      ("\nubacujem u blockedOnSemaphore sa id = %d", running->getLocalId()));
+        ("\nubacujem u blockedOnSemaphore sa id = %d", running->getLocalId()));
     if (maxTimeToWait == 0) {
       blockedOnSemaphore->add(new AlertDecorator(running));
     } else {
       blockedOnSemaphore->add(
-        new SleepyDecorator(running, maxTimeToWait, &returnValue));
+          new SleepyDecorator(running, maxTimeToWait, &returnValue));
     }
     Kernel::getInstance().unlock();
     dispatch();
@@ -118,18 +99,14 @@ KernelSem::wait(Time maxTimeToWait)
   return returnValue;
 }
 
-void
-KernelSem::unblock()
-{
+void KernelSem::unblock() {
   TRACE(("\nUzimam iz blockedOnSemaphore...."));
   List<BaseDecorator>::Iterator it = blockedOnSemaphore->begin();
   delete *it;
   blockedOnSemaphore->remove(it);
 }
 
-void
-KernelSem::signal()
-{
+void KernelSem::signal() {
   Kernel::getInstance().lock();
   TRACE(("\npocetak KernelSem::signal(), val = %d", val));
   if (++val <= 0) {
@@ -138,9 +115,7 @@ KernelSem::signal()
   Kernel::getInstance().unlock();
 }
 
-void
-KernelSem::tick()
-{
+void KernelSem::tick() {
   TRACE(("u KernelSem::tick"));
   List<BaseDecorator>::Iterator it = blockedOnSemaphore->begin();
   while (it != blockedOnSemaphore->end()) {
@@ -154,14 +129,11 @@ KernelSem::tick()
   }
 }
 
-void
-KernelSem::tickSemaphores()
-{
+void KernelSem::tickSemaphores() {
   //	Kernel::getInstance().lock();
   TRACE(("\nulazim u tickSemaphores"));
   List<KernelSem>::Iterator it = Kernel::getInstance().semaphores->begin();
-  for (; it != Kernel::getInstance().semaphores->end(); ++it)
-    (*it)->tick();
+  for (; it != Kernel::getInstance().semaphores->end(); ++it) (*it)->tick();
   TRACE(("\nizlazim iz tickSemaphores"));
   // Kernel::getInstance().unlock();
 }

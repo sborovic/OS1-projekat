@@ -19,45 +19,33 @@ const int n = 15;
 
 Semaphore s(1);
 
-class TestThread : public Thread
-{
-private:
+class TestThread : public Thread {
+ private:
   Time waitTime;
 
-public:
-  TestThread(Time WT)
-    : Thread()
-    , waitTime(WT)
-  {}
+ public:
+  TestThread(Time WT) : Thread(), waitTime(WT) {}
   ~TestThread() { waitToComplete(); }
 
-protected:
+ protected:
   void run();
 };
 
-void
-TestThread::run()
-{
+void TestThread::run() {
   syncPrintf("Thread %d waits for %d units of time.\n", getId(), waitTime);
   int r = s.wait(waitTime);
-  if (getId() % 2)
-    s.signal();
+  if (getId() % 2) s.signal();
   syncPrintf("Thread %d finished: r = %d\n", getId(), r);
 }
 
-void
-tick()
-{
+void tick() {
   t++;
-  if (t)
-    syncPrintf("%d\n", t);
+  if (t) syncPrintf("%d\n", t);
 }
 
-int
-userMain(int argc, char** argv)
-{
+int userMain(int argc, char **argv) {
   syncPrintf("Test starts.\n");
-  TestThread* t[n];
+  TestThread *t[n];
   int i;
   for (i = 0; i < n; i++) {
     t[i] = new TestThread(5 * (i + 1));
