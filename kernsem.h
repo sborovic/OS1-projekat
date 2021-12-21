@@ -7,7 +7,7 @@ class PCB;
 
 class KernelSem {
  public:
-  static void tickSemaphores();
+  static void tickSemaphores(); // poziva se unutar timer(...) prekida
  private:
   int wait(Time maxTimeToWait);
   void signal();
@@ -18,7 +18,6 @@ class KernelSem {
   friend class Semaphore;
   // KernelSem je moguce konstruisati samo unutar Semaphore
   KernelSem(int init);
-  // Zabranjeno je kopiranje KernelSem
   KernelSem(KernelSem const &);
   KernelSem &operator=(KernelSem const &);
   int volatile val;
@@ -35,7 +34,7 @@ class KernelSem {
     virtual int tick();
   };
   class SleepyDecorator : public BaseDecorator {
-   public:
+  public:
     SleepyDecorator(PCB *running, Time timeToWait, int *returnValue);
     virtual int tick();
     Time timeToWait;

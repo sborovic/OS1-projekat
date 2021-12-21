@@ -2,8 +2,8 @@
 
 #include "PCB.h"
 #include "SCHEDULE.H"
-#include "debug.h"
 #include "kernel.h"
+#include "debug.h"
 
 // Definicije
 

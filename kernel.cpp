@@ -2,7 +2,6 @@
 
 #include "PCB.h"
 #include "SCHEDULE.H"
-#include "kernsem.h"
 #include "list.h"
 #include "timer.h"
 #include "debug.h"

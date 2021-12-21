@@ -1,12 +1,9 @@
 #include "kernsem.h"
 
-#include <stdlib.h>
-
 #include "PCB.h"
 #include "SCHEDULE.H"
 #include "kernel.h"
 #include "list.h"
-#include "thread.h"
 #include "debug.h"
 
 /*

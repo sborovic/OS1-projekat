@@ -5,9 +5,9 @@
 
 #include "PCB.h"
 #include "SCHEDULE.H"
-#include "debug.h"
 #include "kernel.h"
 #include "kernsem.h"
+#include "debug.h"
 
 // Ove pomocne promenljive se koriste unutar asm instrukcija
 // Moraju biti globalne jer se asm instrukcijama invalidira tekuci bp
