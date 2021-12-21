@@ -6,11 +6,11 @@
 
 class KernelEv {
 private:
-  friend class Event;
-  KernelEv(IVTNo ivtNo);
-  ~KernelEv();
-  void wait();
-  void signal();  // can call KernelEv
+    friend class Event;
+    KernelEv(IVTNo ivtNo);
+    ~KernelEv();
+    void wait();
+    void signal(); // can call KernelEv
 };
 
 #endif /* _kernelev_h_ */

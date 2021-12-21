@@ -4,10 +4,10 @@
 #include "iostream.h"
 #include "safemem.h"
 class TestClass : SafeMemory {
- public:
-  TestClass();
-  int a;
-  ~TestClass();
-  static TestClass &g();
+public:
+    TestClass();
+    int a;
+    ~TestClass();
+    static TestClass& g();
 };
 #endif

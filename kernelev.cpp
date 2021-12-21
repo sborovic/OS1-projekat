@@ -1,15 +1,15 @@
 #include "kernelev.h"
 
-KernelEv::KernelEv(IVTNo ivtNo) {}
+KernelEv::KernelEv(IVTNo ivtNo) { }
 
-KernelEv::~KernelEv() {
-
+KernelEv::~KernelEv()
+{
 }
 
-void KernelEv::wait() {
-
+void KernelEv::wait()
+{
 }
 
-void KernelEv::signal() {
-
+void KernelEv::signal()
+{
 }
