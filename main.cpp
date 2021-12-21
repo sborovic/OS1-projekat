@@ -1,7 +1,9 @@
 #include "debug.h"
 #include "kernel.h"
 
-int main(int argc, char *argv[]) {
+int
+main(int argc, char* argv[])
+{
   // TRACE(("\nFirst line of main(), argc = %d, argv[0] = %s\n", argc,
   // argv[0]));
   //  Kernel::getInstance(argc, argv);

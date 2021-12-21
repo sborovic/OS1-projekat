@@ -13,30 +13,32 @@ ID PCB::globalId = 0;
 // Definicije
 
 PCB::PCB()
-    : state(PCB::ready),
-      sp(0),
-      ss(0),
-      bp(0),
-      timeSlice(0),
-      unlimited(1),
-      waitingToComplete(),
-      stack(0),
-      myThread(0),
-      localId(0) {}
+  : state(PCB::ready)
+  , sp(0)
+  , ss(0)
+  , bp(0)
+  , timeSlice(0)
+  , unlimited(1)
+  , waitingToComplete()
+  , stack(0)
+  , myThread(0)
+  , localId(0)
+{}
 
-PCB::PCB(Thread *myThread, StackSize stackSize, Time timeSlice)
-    : state(PCB::initial),
-      timeSlice(timeSlice),
-      unlimited(timeSlice ? 0 : 1),
-      waitingToComplete(),
-      stack(new unsigned[stackSize]),
-      myThread(myThread),
-      localId(++globalId) {
-  const StackSize indexOfPSW = stackSize - 1,  // dno steka
-      indexOfCS = stackSize - 2, indexOfIP = stackSize - 3,
-                  indexOfStackTop = stackSize - 12;  // vrh steka
+PCB::PCB(Thread* myThread, StackSize stackSize, Time timeSlice)
+  : state(PCB::initial)
+  , timeSlice(timeSlice)
+  , unlimited(timeSlice ? 0 : 1)
+  , waitingToComplete()
+  , stack(new unsigned[stackSize])
+  , myThread(myThread)
+  , localId(++globalId)
+{
+  const StackSize indexOfPSW = stackSize - 1, // dno steka
+    indexOfCS = stackSize - 2, indexOfIP = stackSize - 3,
+                  indexOfStackTop = stackSize - 12; // vrh steka
 
-  stack[indexOfPSW] = 0x200;  // I = 1
+  stack[indexOfPSW] = 0x200; // I = 1
   stack[indexOfCS] = FP_SEG(PCB::wrapper);
   stack[indexOfIP] = FP_OFF(PCB::wrapper);
 
@@ -47,19 +49,21 @@ PCB::PCB(Thread *myThread, StackSize stackSize, Time timeSlice)
   Kernel::getInstance().PCBsById->add(this);
 }
 
-void PCB::wrapper() {
+void
+PCB::wrapper()
+{
   Kernel::getInstance().running->myThread->run();
   TRACE(("\PCB::wrapper(): posle run() metode niti sa id = %d",
          Kernel::getInstance().running->getLocalId()));
   Kernel::getInstance().lock();
   List<PCB>::Iterator it =
-      Kernel::getInstance().running->waitingToComplete.begin();
+    Kernel::getInstance().running->waitingToComplete.begin();
   List<PCB>::Iterator end =
-      Kernel::getInstance().running->waitingToComplete.end();
+    Kernel::getInstance().running->waitingToComplete.end();
   for (; it != end; ++it) {
     TRACE(
-        ("\nPCB::wrapper(): ubacujemo u waitingToComplete listu nit sa id = %d",
-         (*it)->getLocalId()));
+      ("\nPCB::wrapper(): ubacujemo u waitingToComplete listu nit sa id = %d",
+       (*it)->getLocalId()));
     (*it)->state = PCB::ready;
     Scheduler::put(*it);
   }
@@ -68,10 +72,16 @@ void PCB::wrapper() {
   dispatch();
 }
 
-ID PCB::getLocalId() const { return localId; }
+ID
+PCB::getLocalId() const
+{
+  return localId;
+}
 
-PCB::~PCB() {
-  if (myThread == 0) return;  // u pitanju je mainPCB
+PCB::~PCB()
+{
+  if (myThread == 0)
+    return; // u pitanju je mainPCB
   List<PCB>::Iterator it = Kernel::getInstance().PCBsById->begin(),
                       end = Kernel::getInstance().PCBsById->end();
   for (; it != end && (*it)->localId != localId; ++it)

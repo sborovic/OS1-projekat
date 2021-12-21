@@ -6,7 +6,9 @@
 
 #include "kernel.h"
 
-int syncPrintf(const char *format, ...) {
+int
+syncPrintf(const char* format, ...)
+{
   int res;
   va_list args;
   Kernel::getInstance().lock();

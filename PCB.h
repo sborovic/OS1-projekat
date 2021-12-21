@@ -5,14 +5,22 @@
 #include "safemem.h"
 #include "thread.h"
 
-class PCB : public SafeMemory {
- public:
+class PCB : public SafeMemory
+{
+public:
   void print();
   PCB();
   ~PCB();
   ID getLocalId() const;
   static void wrapper();
-  enum State { initial, ready, blocked, finished, sleeping };
+  enum State
+  {
+    initial,
+    ready,
+    blocked,
+    finished,
+    sleeping
+  };
   State state;
   unsigned sp, ss, bp;
   Time timeSlice;
@@ -20,14 +28,14 @@ class PCB : public SafeMemory {
   List<PCB> waitingToComplete;
   Time timeToWait;
 
- private:
-  PCB(PCB const &);
-  PCB &operator=(PCB const &);
+private:
+  PCB(PCB const&);
+  PCB& operator=(PCB const&);
   // Navedeni privatni konstruktor bice dostupan samo klasi Thread
   friend class Thread;
-  PCB(Thread *myThread, StackSize stackSize, Time timeSlice);
-  unsigned *stack;
-  Thread *myThread;
+  PCB(Thread* myThread, StackSize stackSize, Time timeSlice);
+  unsigned* stack;
+  Thread* myThread;
   static ID globalId;
   ID localId;
 };

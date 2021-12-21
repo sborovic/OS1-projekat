@@ -15,7 +15,9 @@
 static unsigned tss, tsp, tbp;
 static unsigned volatile cnt = 0, unlimited = 1;
 
-pInterrupt timerInit() {
+pInterrupt
+timerInit()
+{
   LOCK pInterrupt oldISR = getvect(0x08);
   setvect(0x60, oldISR);
   setvect(0x08, timer);
@@ -23,13 +25,18 @@ pInterrupt timerInit() {
   return oldISR;
 }
 
-void timerRestore(pInterrupt oldISR) {
+void
+timerRestore(pInterrupt oldISR)
+{
   LOCK setvect(0x08, oldISR);
   UNLOCK
 }
 
-void interrupt timer(...) {
-  if (!Kernel::getInstance().context_switch_on_demand && cnt != 0) cnt--;
+void interrupt
+timer(...)
+{
+  if (!Kernel::getInstance().context_switch_on_demand && cnt != 0)
+    cnt--;
   if ((cnt == 0 && !unlimited) ||
       Kernel::getInstance().context_switch_on_demand) {
     if (!Kernel::getInstance().isLocked()) {

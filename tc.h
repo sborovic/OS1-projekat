@@ -3,11 +3,12 @@
 
 #include "iostream.h"
 #include "safemem.h"
-class TestClass : SafeMemory {
- public:
+class TestClass : SafeMemory
+{
+public:
   TestClass();
   int a;
   ~TestClass();
-  static TestClass &g();
+  static TestClass& g();
 };
 #endif

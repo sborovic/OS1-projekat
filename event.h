@@ -3,16 +3,17 @@
 
 typedef unsigned char IVTNo;
 class KernelEv;
-class Event {
- public:
+class Event
+{
+public:
   Event(IVTNo ivtNo);
   ~Event();
   void wait();
 
- protected:
+protected:
   friend class KernelEv;
-  void signal();  // can call KernelEv
- private:
-  KernelEv *myImpl;
+  void signal(); // can call KernelEv
+private:
+  KernelEv* myImpl;
 };
 #endif /* _event_h_ */
