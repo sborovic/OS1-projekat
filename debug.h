@@ -4,6 +4,10 @@
 #include "utility.h"
 
 #define DEBUG 0
-#define TRACE(x) do { if (DEBUG) syncPrintf x; } while (0)
+#define TRACE(x)                                                               \
+  do {                                                                         \
+    if (DEBUG)                                                                 \
+      syncPrintf x;                                                            \
+  } while (0)
 
 #endif /* _debug_h_ */
