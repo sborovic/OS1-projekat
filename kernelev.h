@@ -2,15 +2,19 @@
 #define _kernelev_h_
 
 #include "event.h"
-#include "semaphor.h"
+class PCB;
 
 class KernelEv {
 private:
     friend class Event;
+    friend class IVTEntry;
     KernelEv(IVTNo ivtNo);
-    ~KernelEv();
     void wait();
-    void signal(); // can call KernelEv
+    void signal();
+    IVTNo ivtNo;
+    int val;
+    PCB* blocked;
+    PCB* constructedBy;
 };
 
 #endif /* _kernelev_h_ */
