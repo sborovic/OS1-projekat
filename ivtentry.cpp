@@ -5,15 +5,14 @@
 IVTEntry* IVTEntry::registry[256];
 
 IVTEntry::IVTEntry(IVTNo ivtNo, pInterrupt newISR)
-: ivtNo(ivtNo), myKernelEv(0)
+: ivtNo(ivtNo), newISR(newISR), myKernelEv(0)
 {
-	oldISR = getvect(ivtNo);
-	setvect(ivtNo, newISR);
+
 	registry[ivtNo] = this;
 }
 
 IVTEntry::~IVTEntry() {
-	setvect(ivtNo, oldISR);
+	//setvect(ivtNo, oldISR);
 }
 
 IVTEntry* IVTEntry::getObject(IVTNo ivtNo) {
