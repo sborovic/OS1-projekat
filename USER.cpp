@@ -1,69 +1,210 @@
+//===========================================================================//
+//   Project: Projekat iz Operativnih sistema 1
+//   File:    user.cpp
+//   Date:    Maj 2021
+//===========================================================================//
 #include <iostream.h>
-#include <setjmp.h>
 #include <stdlib.h>
+#include <assert.h>
 
-#include "PCB.h"
-#include "kernel.h"
-#include "list.h"
+#include "keyevent.h"
+#include "bounded.h"
+#include "user.h"
+#include "intLock.h"
+#include <event.h>
 #include "semaphor.h"
-#include "thread.h"
-#include "utility.h"
 
-/*
-         Test 12: Semafori sa spavanjem 4
-*/
+//---------------------------------------------------------------------------//
+//  Otkomentarisati ukoliko se testira fork
+//---------------------------------------------------------------------------//
+// #define FORK
+//---------------------------------------------------------------------------//
 
-int t = -1;
+//---------------------------------------------------------------------------//
+//  Ovo se menja u testu
+//---------------------------------------------------------------------------//
 
-const int n = 15;
+Time TIME_SLICE = 2;   // 0 ili defaultTimeSlice
 
-Semaphore s(1);
+int N = 3;            // 1 <= N <= 19
 
-class TestThread : public Thread {
-private:
-    Time waitTime;
+//---------------------------------------------------------------------------//
 
+volatile int theEnd=0;
+
+class Producer : public Thread {
 public:
-    TestThread(Time WT)
-        : Thread()
-        , waitTime(WT)
-    {
-    }
-    ~TestThread() { waitToComplete(); }
-
+	Producer (BoundedBuffer* bb, char y, Time time_slice);
+	virtual ~Producer() {waitToComplete(); }
+    Thread* clone() const { return new Producer(myBuffer, x, time_slice_clone); }
 protected:
-    void run();
+	virtual void run ();
+	char produce() {return x;}; // Produce an item
+
+private:
+	Time time_slice_clone;
+	BoundedBuffer* myBuffer;
+	char x;
+	Semaphore sleep;
 };
 
-void TestThread::run()
-{
-    syncPrintf("Thread %d waits for %d units of time.\n", getId(), waitTime);
-    int r = s.wait(waitTime);
-    if (getId() % 2)
-        s.signal();
-    syncPrintf("Thread %d finished: r = %d\n", getId(), r);
+
+
+//---------------------------------------------------------------------------//
+class Consumer : public Thread {
+public:
+	Consumer (BoundedBuffer* bb) : Thread(defaultStackSize, 0), myBuffer(bb), sleep(0) {}
+	virtual ~Consumer() {waitToComplete(); }
+	Thread* clone() const { return new Consumer(myBuffer); }
+protected:
+	virtual void run ();
+	void consume(char p); // Consume an item
+
+private:
+	BoundedBuffer* myBuffer;
+	Semaphore sleep;
+};
+
+
+
+
+//---------------------------------------------------------------------------//
+// Korisnicki program mora obavezno da definise ovu f-ju
+//---------------------------------------------------------------------------//
+void tick(){
 }
 
-void tick()
-{
-    t++;
-    if (t)
-        syncPrintf("%d\n", t);
+//---------------------------------------------------------------------------//
+
+
+Producer::Producer (BoundedBuffer* bb, char y, Time time_slice) 
+: Thread(defaultStackSize, time_slice),myBuffer(bb), x(y), sleep(0), time_slice_clone(time_slice) {}
+	
+	void Producer::run () {
+	while(!theEnd) {
+		char d = produce();
+		myBuffer->append(d);
+		assert(1 != sleep.wait(10));
+	}
 }
 
-int userMain(int argc, char** argv)
-{
-    syncPrintf("Test starts.\n");
-    TestThread* t[n];
-    int i;
-    for (i = 0; i < n; i++) {
-        t[i] = new TestThread(5 * (i + 1));
-        t[i]->start();
-    }
-    for (i = 0; i < n; i++) {
-        t[i]->waitToComplete();
-    }
-    delete t;
-    syncPrintf("Test ends.\n");
-    return 0;
+//---------------------------------------------------------------------------//
+
+
+void Consumer::consume(char p) {
+	intLock
+	cout<<p<<" ";
+	intUnlock
+} // Consume an item
+
+void Consumer::run () {
+		
+	int i = 0;
+	while(!theEnd) {
+		char d = myBuffer->take();
+		consume(d);
+		if (i++ == 40) {
+			assert(1 != sleep.wait(5));
+			i = 0;
+		}else for(int j=0;j<200;j++);
+	}
+ 
+	intLock
+	cout<<endl<<"ESC pressed - empty the buffer!"<<endl;
+	intUnlock
+	
+	while (myBuffer->fullCount()){
+		char d = myBuffer->take();
+		consume(d);
+		dispatch();
+	}
+	
+	
+	intLock
+	cout<<endl<<"Happy End"<<endl;
+	intUnlock
 }
+
+
+
+
+
+int userMain (int argc, char* argv[])
+{
+	BoundedBuffer *buff;
+	Consumer *con;
+	
+	intLock
+	if(argc <2){
+		cout<<"Invalid input!"<<endl;
+		intUnlock
+		return -1;
+	}
+	int buffSize = atoi(argv[1]);
+	N = atoi(argv[2]);
+	N = N>19 ? 19 : N;
+	TIME_SLICE = atoi(argv[3]);
+	
+	if(buffSize<N) {
+		cout<<"Number of Produsers is larger then Buffer size!"<<endl;
+		intUnlock
+		return 1;
+	}
+
+	buff = new BoundedBuffer(buffSize);
+	Producer **pro = new Producer*[N];
+	KeyboardEvent* kev;
+	int i;
+	
+	con = new Consumer(buff);
+	  
+	con->start();
+
+	for (i=0; i<N; i++){
+		pro[i] = new Producer(buff,'0'+i, TIME_SLICE);
+		pro[i]->start();
+	}
+  
+	kev = new KeyboardEvent(buff);
+	intUnlock
+	
+	kev->start();
+		
+	for (i=0; i<N; i++){
+		delete pro[i];
+	}  
+	delete [] pro;
+	delete kev;
+	delete con;
+	delete buff;
+
+#ifdef FORK
+	const int value = 5;
+	int data = 0, *pData = &data;
+	ID result = Thread::fork();
+	if ( result != -1) {
+		if (result == 0) {
+			intLock
+			cout<<"Child created!"<<endl;
+			intUnlock
+			*pData = value;
+			data = value + 1;
+			intLock
+			cout<<"Child finished!"<<endl;
+			intUnlock
+			Thread::exit();
+		} else {
+			Thread::waitForForkChildren();
+			assert(value == data);
+		}
+	}
+
+	assert(result > 0);
+#endif
+
+	intLock
+	cout<<"userMain finished!"<<endl;
+	intUnlock
+	return 0;
+}
+//---------------------------------------------------------------------------//
