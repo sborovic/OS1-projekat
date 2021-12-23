@@ -2,11 +2,12 @@
 #define _event_h_
 
 #include "ivtentry.h"
-
+#include "utility.h"
 #define PREPAREENTRY(numEntry, callOld)\
 	void interrupt inter##numEntry(...);\
 	IVTEntry newEntry##numEntry(numEntry, inter##numEntry);\
 	void interrupt inter##numEntry(...) {\
+		syncPrintf("\nu interrupt rutini!!!!");\
 		newEntry##numEntry.signal();\
 		if (callOld == 1)\
 			newEntry##numEntry.oldISR();\
