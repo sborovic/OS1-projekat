@@ -20,7 +20,7 @@ private:
 	KernelEv* myKernelEv;
 	static IVTEntry* registry[256];
 public:
-	pInterrupt oldISR;
+	pInterrupt newISR, oldISR;
 
 };
 

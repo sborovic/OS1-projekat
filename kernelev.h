@@ -9,6 +9,7 @@ private:
     friend class Event;
     friend class IVTEntry;
     KernelEv(IVTNo ivtNo);
+    ~KernelEv();
     void wait();
     void signal();
     IVTNo ivtNo;

@@ -7,7 +7,6 @@
 	void interrupt inter##numEntry(...);\
 	IVTEntry newEntry##numEntry(numEntry, inter##numEntry);\
 	void interrupt inter##numEntry(...) {\
-		syncPrintf("\nu interrupt rutini!!!!");\
 		newEntry##numEntry.signal();\
 		if (callOld == 1)\
 			newEntry##numEntry.oldISR();\

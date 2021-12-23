@@ -1,19 +1,26 @@
 #include "kernelev.h"
 
+#include <dos.h>
 #include "PCB.h"
 #include "kernel.h"
 #include "SCHEDULE.H"
 #include "utility.h"
 
 KernelEv::KernelEv(IVTNo ivtNo) : ivtNo(ivtNo), val(0), blocked(0), constructedBy(Kernel::getInstance().running) {
-    IVTEntry::getObject(ivtNo)->setKernelEv(this);
+	IVTEntry* ivtEntry = IVTEntry::getObject(ivtNo);
+    ivtEntry->setKernelEv(this);
+	ivtEntry->oldISR = getvect(ivtNo);
+	setvect(ivtNo, ivtEntry->newISR);
+}
+
+KernelEv::~KernelEv() {
+	setvect(ivtNo, IVTEntry::getObject(ivtNo)->oldISR);
 }
 
 
 void KernelEv::wait()
 {
 	Kernel::getInstance().lock();
-	syncPrintf("\nu kernelev:wait, val = %d", val);
 	PCB* running = Kernel::getInstance().running;
 	if(running == constructedBy) {
 		if (val == 1) {
@@ -31,7 +38,6 @@ void KernelEv::wait()
 void KernelEv::signal()
 {
 	Kernel::getInstance().lock();
-	syncPrintf("\nukernelev singal...");
 	if (blocked == 0) val = 1;
 	else {
 		blocked->state = PCB::ready;
