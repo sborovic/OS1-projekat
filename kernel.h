@@ -20,16 +20,17 @@ private:
     Kernel(int argc, char* argv[]);
     Kernel(Kernel const&);
     void operator=(Kernel const&);
+
     class IdleThread : public Thread {
     public:
         IdleThread();
         virtual void run();
         virtual ~IdleThread();
-
     private:
         IdleThread(IdleThread const&);
         IdleThread& operator=(IdleThread const&);
     };
+
     class UserMainThread : public Thread {
     public:
         UserMainThread(int argc, char** argv, int& ret);
@@ -38,11 +39,11 @@ private:
         int& ret;
         int argc;
         char** argv;
-
     private:
         UserMainThread(UserMainThread const&);
         UserMainThread& operator=(UserMainThread const&);
     };
+
     int argc;
     char** argv;
     int ret;

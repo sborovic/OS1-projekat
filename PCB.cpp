@@ -12,7 +12,7 @@ ID PCB::globalId = 0;
 
 // Definicije
 
-PCB::PCB()
+PCB::PCB() // Koristi se samo za konstruisanje mainPCB te je stack = 0
     : state(PCB::ready)
     , sp(0)
     , ss(0)
@@ -46,6 +46,9 @@ PCB::PCB(Thread* myThread, StackSize stackSize, Time timeSlice)
     sp = FP_OFF((stack + indexOfStackTop));
     ss = FP_SEG((stack + indexOfStackTop));
     bp = sp;
+
+    // Radi implementacije racvanja, pocetni bp pokazuje na vrednost 0
+    stack[indexOfStackTop] = 0;
 
     Kernel::getInstance().PCBsById->add(this);
 }

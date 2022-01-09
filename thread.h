@@ -18,6 +18,12 @@ public:
     static ID getRunningId();
     static Thread* getThreadById(ID id);
     PCB* getPCB();
+    // Realizacija racvanja niti
+    static ID fork();
+    static void exit();
+    static void waitForChildren();
+    virtual Thread* clone() const;
+
 
 protected:
     friend class PCB;

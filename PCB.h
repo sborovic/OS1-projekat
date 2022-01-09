@@ -7,8 +7,7 @@
 
 class PCB : public SafeMemory {
 public:
-    void print();
-    PCB();
+    PCB(); // Poziva se iz klase Kernel (da bi se konstruisao mainPCB)
     ~PCB();
     ID getLocalId() const;
     static void wrapper();
@@ -22,14 +21,13 @@ public:
     Time timeSlice;
     int unlimited;
     List<PCB> waitingToComplete;
-    Time timeToWait;
 
 private:
-    PCB(PCB const&);
-    PCB& operator=(PCB const&);
-    // Navedeni privatni konstruktor bice dostupan samo klasi Thread
+    // Navedeni privatni konstruktori bice dostupni samo klasi Thread
     friend class Thread;
     PCB(Thread* myThread, StackSize stackSize, Time timeSlice);
+    PCB(PCB const&);
+    PCB& operator=(PCB const&);
     unsigned* stack;
     Thread* myThread;
     static ID globalId;

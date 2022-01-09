@@ -5,8 +5,6 @@
 #include "debug.h"
 #include "kernel.h"
 
-// Definicije
-
 Thread::Thread(StackSize stackSize, Time timeSlice)
 {
     myPCB = new PCB(this, stackSize / sizeof(unsigned), timeSlice);
@@ -70,4 +68,28 @@ void dispatch()
     TRACE(("\ndispatch(): posle unlock()"));
     Kernel::getInstance().unlock();
     timer();
+}
+
+// Realizacija racvanja niti
+ID Thread::fork() {
+
+	PCB* running = Kernel::getInstance().running;
+	Thread* childThread = running->myThread->clone();
+	PCB* childPCB = childThread->getPCB();
+	// copyStack();
+	// izmena list bpova
+
+
+
+}
+
+void Thread::exit() {
+
+}
+void Thread::waitForChildren() {
+
+}
+
+Thread* Thread::clone() const {
+	return 0;
 }

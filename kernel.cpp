@@ -46,13 +46,14 @@ Kernel& Kernel::getInstance(int argc, char* argv[])
 
 int Kernel::getReturnValue() const
 {
-    TRACE(("\nKernel::getReturnValue()"));
+    TRACE(("\nUnutar Kernel::getReturnValue()..."));
     userMainThread->waitToComplete();
     timerRestore(oldISR);
     return ret;
 }
 
 void Kernel::lock() { ++locked; }
+
 void Kernel::unlock() { --locked; }
 
 int Kernel::isLocked() const { return locked != 0; }
@@ -80,7 +81,7 @@ Kernel::IdleThread::~IdleThread() { }
 void Kernel::IdleThread::run()
 {
     while (1) {
-        //	TRACE(("\nUNUTAR IDLE THREAD!!!!!!!!!!"));
+    	TRACE(("\nUnutar IdleThread::run()..."));
     }
 }
 
@@ -93,7 +94,6 @@ Kernel::UserMainThread::UserMainThread(int argc, char** argv, int& ret)
     , argv(argv)
     , ret(ret)
 {
-    TRACE(("\nKernel::UserMainThread()"));
 }
 Kernel::UserMainThread::~UserMainThread() { waitToComplete(); }
 
