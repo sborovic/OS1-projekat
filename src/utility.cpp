@@ -1,10 +1,10 @@
-#include "utility.h"
+#include "../h/utility.h"
 
 #include <DOS.H>
 #include <STDARG.H>
 #include <STDIO.H>
 
-#include "kernel.h"
+#include "../h/kernel.h"
 
 int syncPrintf(const char* format, ...)
 {

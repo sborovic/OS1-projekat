@@ -1,6 +1,6 @@
-#include "semaphor.h"
+#include "../h/semaphor.h"
 
-#include "kernsem.h"
+#include "../h/kernsem.h"
 
 Semaphore::Semaphore(int init) { myImpl = new KernelSem(init); }
 

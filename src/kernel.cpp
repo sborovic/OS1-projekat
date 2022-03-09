@@ -1,10 +1,10 @@
 #include "kernel.h"
 
-#include "PCB.h"
-#include "SCHEDULE.H"
-#include "debug.h"
-#include "list.h"
-#include "timer.h"
+#include "../h/PCB.h"
+#include "../h/SCHEDULE.H"
+#include "../h/debug.h"
+#include "../h/list.h"
+#include "../h/timer.h"
 
 int userMain(int, char*[]); // Funkcija korisnickog programa
 

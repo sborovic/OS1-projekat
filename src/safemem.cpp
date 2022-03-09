@@ -1,6 +1,6 @@
-#include "safemem.h"
+#include "../h/safemem.h"
 
-#include "kernel.h"
+#include "../h/kernel.h"
 
 void* SafeMemory::operator new(size_t size)
 {

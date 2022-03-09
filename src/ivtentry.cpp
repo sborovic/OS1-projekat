@@ -1,5 +1,5 @@
-#include "ivtentry.h"
-#include "kernelev.h"
+#include "../h/ivtentry.h"
+#include "../h/kernelev.h"
 #include <dos.h>
 
 IVTEntry* IVTEntry::registry[256];

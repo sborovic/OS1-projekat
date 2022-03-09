@@ -1,5 +1,5 @@
-#include "event.h"
-#include "kernelev.h"
+#include "../h/event.h"
+#include "../h/kernelev.h"
 
 Event::Event(IVTNo ivtNo)
 {

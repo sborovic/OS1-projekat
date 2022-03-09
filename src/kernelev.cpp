@@ -1,10 +1,10 @@
-#include "kernelev.h"
+#include "../h/kernelev.h"
 
 #include <dos.h>
-#include "PCB.h"
-#include "kernel.h"
-#include "SCHEDULE.H"
-#include "utility.h"
+#include "../h/PCB.h"
+#include "../h/kernel.h"
+#include "../h/SCHEDULE.H"
+#include "../h/utility.h"
 
 KernelEv::KernelEv(IVTNo ivtNo) : ivtNo(ivtNo), val(0), blocked(0), constructedBy(Kernel::getInstance().running) {
 	IVTEntry* ivtEntry = IVTEntry::getObject(ivtNo);

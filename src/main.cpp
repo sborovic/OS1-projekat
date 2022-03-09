@@ -1,5 +1,5 @@
-#include "debug.h"
-#include "kernel.h"
+#include "../h/debug.h"
+#include "../h/kernel.h"
 
 int main(int argc, char* argv[])
 {

@@ -1,10 +1,10 @@
-#include "PCB.h"
+#include "../h/PCB.h"
 
 #include <dos.h>
 
-#include "SCHEDULE.H"
-#include "debug.h"
-#include "kernel.h"
+#include "../h/SCHEDULE.H"
+#include "../h/debug.h"
+#include "../h/kernel.h"
 
 // Inicijalizacija statickih promenljivih
 

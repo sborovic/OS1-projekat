@@ -1,13 +1,13 @@
-#include "timer.h"
+#include "../h/timer.h"
 
 #include <dos.h>
 #include <iostream.h>
 
-#include "PCB.h"
-#include "SCHEDULE.H"
-#include "debug.h"
-#include "kernel.h"
-#include "kernsem.h"
+#include "../h/PCB.h"
+#include "../h/SCHEDULE.H"
+#include "../h/debug.h"
+#include "../h/kernel.h"
+#include "../h/kernsem.h"
 
 // Ove pomocne promenljive se koriste unutar asm instrukcija
 // Moraju biti globalne jer se asm instrukcijama invalidira tekuci bp
